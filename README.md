@@ -30,7 +30,7 @@ If the programme’s objective were solely to maximise revenue and a single cong
 
 <img align="center" width="300" src="https://github.com/vytknguyen/London-Congestion-Charge/blob/main/SinglePriceRevenue.png?raw=true"/></a>
 
-**Insights:** 
+**💡 Insights:** 
 
 **If a single congestion charge were to be charged across both peak and non-peak hours, the optimal revenue is £1349009 achieved at the price level £8.**
 
@@ -44,7 +44,7 @@ If the programme’s objective were solely to maximise revenue and a peak period
 
 <img width="300" src="https://github.com/vytknguyen/London-Congestion-Charge/blob/main/RevenuevsPeakPrice.png?raw=true"/></a>
 
-**Insights:** 
+**💡 Insights:** 
 
 **When Non-peak periods have a base price of £7, the optimal revenue is £1371826 at the optimal price for the Peak-hours slot is £9. Level of emssisions for this price point is 37110 (g/km)**
 
@@ -53,7 +53,7 @@ If the programme’s objective were solely to maximise revenue and a peak period
 Suppose now that the programme’s objective is to minimize emissions rather than maximizing revenue. However, the City would like to ensure that the programme can self-sustain its operation and that a sufficient portion of the revenue is allocated to reinvest in the public transportation infrastructure. Overall, the City requires that the revenue should not fall below £1.1 million per day. Assuming a non-peak period price of £7, what
 price would we recommend for the peak period? Please compare the resulting revenue and emissions level with that of scenario 2.
 
-**Insights:**
+**💡 Insights:**
 
 The main goal is to optimise the revenue, at base price of £7:
 - Optimal peak price: £9
