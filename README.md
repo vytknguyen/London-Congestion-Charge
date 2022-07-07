@@ -4,7 +4,7 @@ This project raised by the interest in applying **Revenue and Pricing Management
 
 <img src="https://images.prismic.io/drive-electric/123f964a-4bf3-4964-9d90-dca6b40ffc5f_congestion-charge-ulez-map.webp?auto=compress,format&w=812&fit=clip" align="center" width="600" /></a>
 
-### Project description
+## Project description
 
 London is considering an extension to its Congestion Charge programme, a daily charge for driving a vehicle within the charging zone between the hours of 07:00 and 18:00, Monday to Friday. The extension explores the revenue and environmental impact of introducing a two-tier congestion pricing policy for peak and non-peak traffic periods.
 
@@ -12,7 +12,7 @@ The City conducted a survey to learn more about the willingness to pay of driver
 
 A main factor that determines emissions per car is the average travel speed, which in turn is influenced by the number of drivers entering the charging zone. The relationship between the number of drivers and average speed is given by the following:
 
-*(The regression relationship will change over time, hence, this needs to be updated as the point of performing an analysis.)*
+*(The regression relationships will change over time, hence, this needs to be updated as the point of performing an analysis.)*
 
 **Average Speed (in km/h) = 30 – 0.0625 * (# of cars in thousands, ‘000)**
 
@@ -22,15 +22,15 @@ Further, the emissions per car, which is generally measured in grams of CO2 per 
   - **= 617.5 – 16.7 * (Average Speed) if Average Speed < 25 km/h**
   - **= 235.0 – 1.4 * (Average Speed) if Average Speed ³ 25 km/h**
 
-### Scenario 1
+### 🅿️ Scenario 1
 
 If the programme’s objective were solely to maximise revenue and a single congestion charge were to be applied across both peak and non-peak hours, which price would maximize the total revenue? With this price in effect, what is the total level of emissions?
 
-### Scenario 2
+### 💨 Scenario 2
 
 If the programme’s objective were solely to maximise revenue and a peak period pricing strategy is to be implemented, with the price for the non-peak period set at £7, what price would you recommend for the peak period? Please note the resulting revenue and emissions and compare the findings with those from scenario 1.
 
-### Scenario 3
+### 🚗 Scenario 3
 
 Suppose now that the programme’s objective is to minimize emissions rather than maximizing revenue. However, the City would like to ensure that the programme can self-sustain its operation and that a sufficient portion of the revenue is allocated to reinvest in the public transportation infrastructure. Overall, the City requires that the revenue should not fall below £1.1 million per day. Assuming a non-peak period price of £7, what
 price would you recommend for the peak period? Please compare the resulting revenue and emissions level with that of scenario 2.
