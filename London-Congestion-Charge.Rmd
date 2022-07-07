@@ -1,0 +1,447 @@
+---
+Title: London Congestion Charge Programme
+Author: Vy Nguyen
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Data pre-processing
+
+```{r Load libraries}
+library(nloptr)
+library(stargazer)
+library(lattice)
+library(ggplot2)
+```
+
+```{r Import data}
+
+# Set working directory
+
+setwd('~/Library/CloudStorage/OneDrive-City,UniversityofLondon/term 2/SMM641 Revenue Management and Pricing/Courseworks/Problem Set 2 (28:03) (checked)')
+
+# Import the data
+
+data=read.csv('CongestionPricing.csv')
+
+# Inspect data structures
+
+head(data)
+
+str(data)
+
+# Get the number of data observations
+
+N=nrow(data)
+```
+
+# Scenario 1: Sinple Price Optimisation
+
+If the programme’s objective were solely to maximise revenue and a single congestion charge were to be applied across both peak and non-peak hours, which price would maximize the total revenue? With this price in effect, what is the total level of emissions?
+
+To fine the optimal single price, we set a single price across all time slots and all car types to find the maximised revenue and compute the according emissions.
+
+```{r maxWTP}
+
+# Get the maximum WTP across 2 time slots
+
+for (i in 1:N){data$maxWTP[i]=max(data[i,2:3])}
+
+# Check the new column
+
+head(data)
+```
+
+```{r Optimal Single Price Search}
+
+# The maximum WTP in data, we can use this as the upper bound for our price search
+# No need to consider a price if no one can afford it.
+
+maxprice=max(data$maxWTP)
+
+# Define empty array variables we will be introducing
+
+demandSinglePrice = rep(NA,maxprice)
+revenue           = rep(NA,maxprice)
+averageSpeed      = rep(NA,maxprice)
+emissionsPerCar   = rep(NA,maxprice)
+totalEmissions    = rep(NA,maxprice)
+demandLondon      = rep(NA,maxprice)
+price             = c(1:maxprice)
+
+# Find how many people willing to buy at different price levels
+
+for (p in 1:maxprice){
+    # demand at each price level
+    demandSinglePrice[p] = sum(data$maxWTP>=p) # total number of TRUE value
+    # convert demand to represent the population level (in thousands)
+    demandLondon[p] = demandSinglePrice[p]*192/N
+    # total revenue of congestion charge in London
+    revenue[p]=p*demandLondon[p]*1000
+}
+
+task1a = data.frame(price, demandSinglePrice, demandLondon, 
+                    averageSpeed, emissionsPerCar, totalEmissions, revenue)
+
+# Identify values to maximise Revenue
+
+revenueBest = max(revenue) 
+priceBest = which(revenue == revenueBest)
+emissionsPerCarBest = emissionsPerCar[priceBest]
+totalEmissionsBest = totalEmissions[priceBest]
+
+# Print result
+
+print(paste("If a single congestion charge were to be charged across both peak and non-peak hours, the optimal revenue is (£)", round(revenueBest),"achieved at the price level (£)", priceBest))
+```
+
+```{r Level of Emissions}
+
+# Set empty array
+
+demandNonPeak_single = rep(NA,N)
+demandPeak_single = rep(NA,N)
+
+# Compute the consumer surplus and classify which hours driver will enter London
+
+for (r in 1:N){
+  surplusNonPeak_single = data[r,3] - priceBest
+  surplusPeak_single = data[r,2] - priceBest
+  demandNonPeak_single[r] = (surplusNonPeak_single>surplusPeak_single)*(surplusNonPeak_single>=0)
+  demandPeak_single[r] = (surplusPeak_single>=surplusNonPeak_single)*(surplusPeak_single>=0)
+}
+
+# Demand of total population (in thousands)
+
+demandNonPeak_single_total = sum(demandNonPeak_single) * (192/N)
+demandPeak_single_total = sum(demandPeak_single) * (192/N)
+
+# Compute average speed and emissions level at 2 periods
+
+avg_speed_NonPeak = 30 - 0.0625*demandNonPeak_single_total
+emissions_NonPeak = (ifelse(avg_speed_NonPeak<25,
+                           617.5-16.7*avg_speed_NonPeak,
+                           235.0-1.4*avg_speed_NonPeak))*demandNonPeak_single_total
+
+avg_speed_Peak = 30 - 0.0625*demandPeak_single_total
+emissions_Peak = (ifelse(avg_speed_Peak<25,
+                           617.5-16.7*avg_speed_Peak,
+                           235.0-1.4*avg_speed_Peak))*demandPeak_single_total
+
+# Level of emssions all day 
+
+emissionsLevel = emissions_NonPeak + emissions_Peak
+
+# Print result
+
+print(paste("At", priceBest,", the total level of emissions is",
+            round(emissionsLevel),"(g/km)"))
+```
+
+
+```{r Plot Number of Cars vs Single Price}
+
+# Plotting Number of cars vs Price
+
+xaxis=1:maxprice
+
+plot(xaxis, demandLondon,
+     pch = 16, type="s", col="blue", las=1, xaxt="n",
+     xlab="Congestion Charge (£)",ylab="Number of Demands (in thousands)",
+     main = "Number of Demands at Different Levels of Congestion Charge")
+
+xticks <- seq(0, maxprice, by=2)
+
+axis(side = 1, at = xticks)
+```
+
+```{r Plot Revenue vs Single Price}
+
+# Plotting Revenue vs Price
+
+xaxis=1:maxprice
+
+plot(xaxis,revenue/1000,pch = 16, type="s",col="blue",las=1, xaxt="n",
+     xlab="Congestion Charge (£)",ylab="Generated Funds (in thousands £)",
+     main = "Generated Funds and Congestion Charge")
+
+xticks <- seq(0, maxprice, by=2)
+
+axis(side = 1, at = xticks) 
+
+axis(side = 1, at = priceBest) 
+
+lines(c(priceBest,priceBest),c(0, revenueBest/1000),lty=2)
+
+axis(side = 2, at = round(revenueBest/1000,3),las=1,pos=20, tick=F)
+
+lines(c(20,priceBest),c(revenueBest/1000, revenueBest/1000),lty=2)
+```
+
+# Scenario 2: Find Optimal Peak Price at Base Price Level £7
+
+If the programme’s objective were solely to maximise revenue and a peak period pricing
+strategy is to be implemented, with the price for the non-peak period set at £7, what price would we recommend for the peak period? Note the resulting revenue and
+emissions and compare the findings with those from scenario 1.
+
+```{r Step 1: Nonpeak Maximum Surplus}
+
+basePrice = 7
+
+data$surplusNonPeak = data$Nonpeak_WTP-basePrice
+
+data[1:10,]
+```
+
+```{r Step 2: Peak Maximum Surplus}
+
+# Create a matrix of N rows, max price columns, fill with all 0 value
+surplusPeak = matrix(0,N,maxprice) 
+
+# Compute Maximum Peak Surplus
+
+for (p in 1:maxprice){
+    for (i in 1:N){
+        surplusPeak[i,p]=data[i,2]-p
+    }
+}
+
+# Show results
+
+colnames(surplusPeak)=paste0("p=",1:maxprice)
+
+surplusPeak[1:10,]
+```
+
+```{r Step 3: Demands for Peak and NonPeak hours}
+
+# Create empty arrays
+
+demandNonPeak<-rep(0,maxprice)
+
+demandPeak<-rep(0,maxprice)
+
+revenue2<-rep(0,maxprice)
+
+emissions1b<-rep(0,maxprice)
+
+demand1b<-rep(0,maxprice)
+
+# Compare consumer surplus and classify customer segments into peak and non-peak hours
+
+for (p in 1:maxprice){
+  
+  surplusNonPeak = data$surplusNonPeak
+  
+  demandNonPeak[p]=sum((surplusNonPeak>surplusPeak[,p])*(surplusNonPeak>=0)) * (192/N)
+  
+  demandPeak[p]=sum((surplusPeak[,p]>=surplusNonPeak)*(surplusPeak[,p]>=0)) * (192/N)
+  
+  revenue2[p]=basePrice*demandNonPeak[p]*1000+p*demandPeak[p]*1000
+  
+  # Find level of emissions at each price point
+  
+  ## Non Peak hours
+  
+  avg_speed_NonPeak = 30 - 0.0625*demandNonPeak[p]
+  
+  emissions_NonPeak = (ifelse(avg_speed_NonPeak<25,
+                           617.5-16.7*avg_speed_NonPeak,
+                           235.0-1.4*avg_speed_NonPeak))*demandNonPeak[p]
+  ## Peak hours
+  
+  avg_speed_Peak = 30 - 0.0625*demandPeak[p]
+  
+  emissions_Peak = (ifelse(avg_speed_Peak<25,
+                           617.5-16.7*avg_speed_Peak,
+                           235.0-1.4*avg_speed_Peak))*demandPeak[p]
+
+  # Level of emissions all day 
+  
+  emissions1b[p] = emissions_NonPeak + emissions_Peak
+  
+  emissions1b[p]
+}
+
+task1b = data.frame(peakPrice=c(1:maxprice),
+                    demandNonPeak, demandPeak, 
+                    revenue2, emissions1b)
+task1b
+```
+
+```{r Maximum Revenue}
+
+# Identify values to maximise Revenue
+
+revenueBest2 = max(revenue2)
+
+priceBest2 = which(revenue2 == revenueBest2)
+
+emissionsBest2 = emissions1b[priceBest2]
+
+# Print result
+
+print(paste("When Non-peak periods have a base price of 7 (£), the optimal revenue is", round(revenueBest2), "(£) at the optimal price for the Peak-hours slot is", priceBest2, "(£)"))
+
+print(paste("Level of emssisions for this price point is", round(emissionsBest2), "(g/km)"))
+```
+
+```{r Plot Non-Peak Demand vs Peak Period Price}
+
+# Plotting NonPeak Demand vs Peak Period Price
+
+xaxis=1:maxprice
+
+plot(xaxis,task1b$demandNonPeak,pch = 16, type="s",col="blue", las=1, xaxt="n",
+     xlab="Congestion Charge  for Peak Period (£)",ylab="Non-Peak Demand (in thousands)",
+     main = "NonPeak Demand vs Peak Period Congestion Charge ")
+
+xticks <- seq(0, maxprice, by=2)
+
+axis(side = 1, at = xticks)
+```
+
+
+```{r Plotting Peak Demand vs Peak Period Price}
+
+# Plotting Peak Demand vs Peak Period Price
+
+xaxis=1:maxprice
+
+plot(xaxis,task1b$demandPeak,pch = 16, type="s",col="blue", las=1, xaxt="n",
+     xlab="Congestion Charge for Peak Period (£)",ylab="Peak Period Demand (in thousands)",
+     main = "Peak Demand vs Peak Period Congestion Charge")
+
+xticks <- seq(0, maxprice, by=2)
+
+axis(side = 1, at = xticks)
+```
+
+```{r Plotting Revenue vs Peak Period Price}
+
+# Plotting Revenue vs Peak Period Price
+
+xaxis=1:maxprice
+
+plot(xaxis,task1b$revenue2/1000,pch = 16, type="s",col="blue", las=1, xaxt="n",
+     xlab="Price for Peak Period",ylab="Generated Funds (thousands £)",
+     main = "Generated Funds vs Peak Period Price")
+
+xticks <- seq(0, maxprice, by=2)
+
+axis(side = 1, at = xticks)
+
+revenueBest2 = max(revenue2[basePrice:maxprice])
+
+priceBest2 = which(revenue2/1000 == revenueBest2/1000)
+
+axis(side = 1, at = priceBest2) 
+
+lines(c(priceBest2,priceBest2),c(0, revenueBest2),lty=2)
+
+axis(side = 4, at = round(revenueBest2/1000,3),las=1, pos=17.1, tick=F)
+
+lines(c(priceBest2,20),c(revenueBest2/1000, revenueBest2/1000),lty=2)
+```
+
+# Scenrio 3: Optimisation  
+
+Suppose now that the programme’s objective is to minimize emissions rather than
+maximize revenue. However, the City would like to ensure that the programme can
+self-sustain its operation and that a sufficient portion of the revenue is allocated to reinvest in the public transportation infrastructure. Overall, the City requires that the revenue should not fall below £1.1 million per day. 
+
+Assuming a non-peak period price of £7, what price would we recommend for the peak period? Compare the resulting revenue and emissions level with that of part of Scenario 2.
+
+```{r Fit Linear Models}
+
+# Fit linear model for multiple price
+
+fitNonPeak = lm(demandNonPeak~peakPrice, data=task1b)
+
+a1=coef(fitNonPeak)[1]
+
+b1=coef(fitNonPeak)[2]
+
+summary(fitNonPeak)
+
+fitPeak = lm(demandPeak~peakPrice, data=task1b)
+
+a2=coef(fitPeak)[1]
+
+b2=coef(fitPeak)[2]
+
+summary(fitPeak)
+```
+
+The results show a great fit to the data points with significantly high R-squared.
+
+```{r Use Linear Models to Solve Optimisation Problem}
+
+demandNonPeak=rep(0,maxprice)
+
+demandPeak=rep(0,maxprice)
+
+demandTotal=rep(0,maxprice)
+
+emissionsNonPeak=rep(0,maxprice)
+
+emissionsPeak=rep(0,maxprice)
+
+emissionsTotal=rep(0,maxprice)
+
+revenue1c=rep(0,maxprice)
+
+for (p in (1:maxprice)) {
+  
+  demandNonPeak[p]=a1+b1*p
+  
+  demandPeak[p]=a2+b2*p
+  
+  demandTotal[p]=demandNonPeak[p]+demandPeak[p] # in thousand
+  
+  averageSpeed_NonPeak=30-0.0624*demandNonPeak[p]
+
+  emissionsNonPeak[p] = (ifelse(avg_speed_NonPeak<25,
+                           617.5-16.7*avg_speed_NonPeak,
+                           235.0-1.4*avg_speed_NonPeak))*demandNonPeak[p]
+  
+  averageSpeed_Peak=30-0.0624*demandPeak[p]
+  
+  emissionsPeak[p] = (ifelse(averageSpeed_Peak<25,
+                           617.5-16.7*averageSpeed_Peak,
+                           235.0-1.4*averageSpeed_Peak))*demandPeak[p]
+  
+  emissionsTotal[p]=emissionsNonPeak[p] + emissionsPeak[p]
+  
+  revenue1c[p]=7*demandNonPeak[p]+p*demandPeak[p]
+}
+
+task1c = data.frame(c(1:17), demandNonPeak, demandPeak, demandTotal, 
+                    emissionsNonPeak, emissionsPeak,
+                    emissionsTotal, revenue1c) 
+task1c
+```
+
+```{r Classify revenue on constraint}
+
+task1c=task1c[task1c$revenue1c>=1100,]
+task1c
+```
+
+```{r Identify the optimal metrics}
+
+# Identify the optimal result
+
+emissionsBest1c = min(task1c$emissionsTotal)
+
+priceBest1c = which(emissionsTotal == emissionsBest1c)
+
+revenueBest1c = revenue1c[priceBest1c] # in thousand
+
+print(paste("Minimum emissions level of (g/km)", round(emissionsBest1c), "is achieved at price (£)", round(priceBest1c), "with the generated refund of (£)", round(revenueBest1c*1000))
+)
+```
+
