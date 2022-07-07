@@ -20,7 +20,7 @@ Further, the emissions per car, which is generally measured in grams of CO2 per 
 
 **Emissions per car (g/km):**
   - **= 617.5 – 16.7 * (Average Speed) if Average Speed < 25 km/h**
-  - **= 235.0 – 1.4 * (Average Speed) if Average Speed ³ 25 km/h**
+  - **= 235.0 – 1.4 * (Average Speed) if Average Speed > 25 km/h**
 
 ### 🅿️ Scenario 1
 
