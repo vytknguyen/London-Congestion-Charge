@@ -38,11 +38,11 @@ If the programme’s objective were solely to maximise revenue and a single cong
 
 If the programme’s objective were solely to maximise revenue and a peak period pricing strategy is to be implemented, with the price for the non-peak period set at £7, what price would we recommend for the peak period? Also noting the resulting revenue and emissions and compare the findings with those from scenario 1.
 
-<img align="left" width="300" src="https://github.com/vytknguyen/London-Congestion-Charge/blob/main/NonPeakDemandvsPeakPrice.png?raw=true"/></a>
+<img align="left" width="250" src="https://github.com/vytknguyen/London-Congestion-Charge/blob/main/NonPeakDemandvsPeakPrice.png?raw=true"/></a>
 
-<img align="left" width="300" src="https://github.com/vytknguyen/London-Congestion-Charge/blob/main/PeakDemandvsPeakPrice.png?raw=true"/></a>
+<img align="left" width="250" src="https://github.com/vytknguyen/London-Congestion-Charge/blob/main/PeakDemandvsPeakPrice.png?raw=true"/></a>
 
-<img width="300" src="https://github.com/vytknguyen/London-Congestion-Charge/blob/main/RevenuevsPeakPrice.png?raw=true"/></a>
+<img width="250" src="https://github.com/vytknguyen/London-Congestion-Charge/blob/main/RevenuevsPeakPrice.png?raw=true"/></a>
 
 **💡 Insights:** 
 
