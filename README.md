@@ -1,10 +1,10 @@
-# London-Congestion-Charge-programme
+# London-Congestion-Charge-Programme
 
 This project raised by the interest in applying **Revenue and Pricing Management** theories to the London Congestion Charge programme, as to reduce emissions level and generate funds to reinvest in improving public transportation services. 
 
 <img src="https://images.prismic.io/drive-electric/123f964a-4bf3-4964-9d90-dca6b40ffc5f_congestion-charge-ulez-map.webp?auto=compress,format&w=812&fit=clip" align="center" width="600" /></a>
 
-## Project description
+## Project Description
 
 London is considering an extension to its Congestion Charge programme, a daily charge for driving a vehicle within the charging zone between the hours of 07:00 and 18:00, Monday to Friday. The extension explores the revenue and environmental impact of introducing a two-tier congestion pricing policy for peak and non-peak traffic periods.
 
