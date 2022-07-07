@@ -26,14 +26,46 @@ Further, the emissions per car, which is generally measured in grams of CO2 per 
 
 If the programme’s objective were solely to maximise revenue and a single congestion charge were to be applied across both peak and non-peak hours, which price would maximize the total revenue? With this price in effect, what is the total level of emissions?
 
+<img align="left" width="300" src="https://github.com/vytknguyen/London-Congestion-Charge/blob/main/SinglePriceDemand.png?raw=true"/></a>
+
+<img align="center" width="300" src="https://github.com/vytknguyen/London-Congestion-Charge/blob/main/SinglePriceRevenue.png?raw=true"/></a>
+
+**Insights:** 
+
+**If a single congestion charge were to be charged across both peak and non-peak hours, the optimal revenue is £1349009 achieved at the price level £8.**
+
 ### 💨 Scenario 2
 
-If the programme’s objective were solely to maximise revenue and a peak period pricing strategy is to be implemented, with the price for the non-peak period set at £7, what price would you recommend for the peak period? Please note the resulting revenue and emissions and compare the findings with those from scenario 1.
+If the programme’s objective were solely to maximise revenue and a peak period pricing strategy is to be implemented, with the price for the non-peak period set at £7, what price would we recommend for the peak period? Also noting the resulting revenue and emissions and compare the findings with those from scenario 1.
+
+<img align="left" width="300" src="https://github.com/vytknguyen/London-Congestion-Charge/blob/main/NonPeakDemandvsPeakPrice.png?raw=true"/></a>
+
+<img align="left" width="300" src="https://github.com/vytknguyen/London-Congestion-Charge/blob/main/PeakDemandvsPeakPrice.png?raw=true"/></a>
+
+<img width="300" src="https://github.com/vytknguyen/London-Congestion-Charge/blob/main/RevenuevsPeakPrice.png?raw=true"/></a>
+
+**Insights:** 
+
+**When Non-peak periods have a base price of £7, the optimal revenue is £1371826 at the optimal price for the Peak-hours slot is £9. Level of emssisions for this price point is 37110 (g/km)**
 
 ### 🚗 Scenario 3
 
 Suppose now that the programme’s objective is to minimize emissions rather than maximizing revenue. However, the City would like to ensure that the programme can self-sustain its operation and that a sufficient portion of the revenue is allocated to reinvest in the public transportation infrastructure. Overall, the City requires that the revenue should not fall below £1.1 million per day. Assuming a non-peak period price of £7, what
-price would you recommend for the peak period? Please compare the resulting revenue and emissions level with that of scenario 2.
+price would we recommend for the peak period? Please compare the resulting revenue and emissions level with that of scenario 2.
+
+**Insights:**
+
+The main goal is to optimise the revenue, at base price of £7:
+- Optimal peak price: £9
+- Optimal revenue: £1,371,826
+- Total level of emissions: 37,110 (g/km)
+
+When setting the constraints to minimise emissions level:
+- Optimal peak price: £14
+- Optimal revenue: £1,183,868
+- Total level of emissions: 27,310 (g/km)
+
+Obviously, by raising the price, the total level of emissions has improved significantly, at which price the generated funds can self-sustain its operation.
 
 **Analysis is delivered in July 2022.**
 
